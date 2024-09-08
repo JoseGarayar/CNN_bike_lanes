@@ -1,0 +1,10 @@
+data/images/train/India_000000.jpg
+data/images/train/India_000001.jpg
+data/images/train/India_000002.jpg
+data/images/train/India_000003.jpg
+data/images/train/India_000005.jpg
+data/images/train/India_000007.jpg
+data/images/train/India_000010.jpg
+data/images/train/India_000011.jpg
+data/images/train/India_000012.jpg
+data/images/train/India_000014.jpg

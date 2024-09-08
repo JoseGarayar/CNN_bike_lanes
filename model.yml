@@ -1,0 +1,14 @@
+services:
+  model:
+    build:
+      context: .
+      dockerfile: ./compose/local/model/Dockerfile
+    image: yolo_assessment
+    container_name: yolo_assessment
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./.envs/.model.env
+    ports:
+      - "8888:8888"
+    command: ["/start"]
