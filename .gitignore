@@ -264,3 +264,7 @@ tags
 .env
 .envs/*
 !.envs/.local/
+
+# Dataset
+app/datasets
+app/datasets_raw
