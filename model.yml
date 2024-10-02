@@ -12,3 +12,12 @@ services:
     ports:
       - "8888:8888"
     command: ["/start"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    shm_size: '16gb'  # Aumenta el tamaño de la memoria compartida
+

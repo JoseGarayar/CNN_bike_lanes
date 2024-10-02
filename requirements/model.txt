@@ -7,8 +7,11 @@ scikit-learn==1.2.2
 matplotlib==3.8.4
 seaborn==0.13.2
 tensorflow==2.17.0
-torch==2.0.0+cu117
-torchvision==0.15.0+cu117
-torchaudio==2.0.0+cu117
 ultralytics==8.2.84
+
+# Install the latest versions of PyTorch, Torchvision, and Torchaudio compatible with CUDA 11.7
+torch
+torchvision
+torchaudio
+
 -f https://download.pytorch.org/whl/cu117/torch_stable.html

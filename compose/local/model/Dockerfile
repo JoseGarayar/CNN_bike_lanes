@@ -2,6 +2,7 @@
 FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
 
 ENV PYTHONUNBUFFERED 1
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies and Python
 RUN apt-get update && \
@@ -22,7 +23,7 @@ COPY ./requirements /requirements
 
 # Install Python packages including PyTorch with CUDA support
 RUN pip install --upgrade pip && \
-    pip install -r /requirements/model.txt
+    pip install --no-cache-dir -r /requirements/model.txt
 
 # Copy and set up the start script
 COPY ./compose/local/model/start /start

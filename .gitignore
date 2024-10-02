@@ -2,6 +2,9 @@
 # app data
 .documents/
 .app/data/
+.app/datasets/
+.app/datasets_raw/
+.app/runs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
