@@ -8,8 +8,12 @@ Additionally, we introduce a new dataset with images from bike lanes in Metropol
 
 To install the required libraries for running the project, use the following command with a virtual environment:
 
-```python
+```bash
 pip install -r requirements/model.txt
 ```
 
 We also provide a model.yml file for running the project using Docker Compose. However, please note that using this approach may prevent the GPU from being fully utilized, and you may not achieve 100% GPU performance.
+
+```bash
+docker-compose -f model.yml up --build
+```
