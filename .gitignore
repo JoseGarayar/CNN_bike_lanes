@@ -5,7 +5,7 @@ app/data/
 app/datasets/
 app/datasets_raw/
 app/runs/
-app/labelstudio_output/
+app/labelstudio_output/*/images/
 app/pretrained_models/
 
 # Byte-compiled / optimized / DLL files
