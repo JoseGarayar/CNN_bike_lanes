@@ -5,8 +5,8 @@ app/data/
 app/datasets/
 app/datasets_raw/
 app/runs/
-app/labelstudio_output
-app/pretrained_models
+app/labelstudio_output/
+app/pretrained_models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
