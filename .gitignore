@@ -1,10 +1,12 @@
 ### Python template
 # app data
 .documents/
-.app/data/
-.app/datasets/
-.app/datasets_raw/
-.app/runs/
+app/data/
+app/datasets/
+app/datasets_raw/
+app/runs/
+app/labelstudio_output
+app/pretrained_models
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

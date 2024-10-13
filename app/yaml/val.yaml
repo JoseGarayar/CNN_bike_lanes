@@ -1,0 +1,18 @@
+train: []
+
+val:
+  - ../init_baseChina_Drone/images/val
+  - ../init_baseChina_MotorBike/images/val
+  - ../init_baseCzech/images/val
+  - ../init_baseIndia/images/val
+  - ../init_baseJapan/images/val
+  - ../init_baseNorway/images/val
+  - ../init_baseUnited_States/images/val
+
+nc: 4
+
+names:
+  0: 'D00'
+  1: 'D10'
+  2: 'D20'
+  3: 'D40'
