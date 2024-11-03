@@ -1,0 +1,16 @@
+train:
+  - ../lima_bike_lanes_subsets/images/train
+
+val:
+  - ../lima_bike_lanes_subsets/images/val
+
+test:
+  - ../lima_bike_lanes_subsets/images/test
+  
+nc: 4
+
+names:
+  0: 'D00'
+  1: 'D10'
+  2: 'D20'
+  3: 'D40'

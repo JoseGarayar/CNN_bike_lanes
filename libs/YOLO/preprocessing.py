@@ -1,36 +1,30 @@
 # import libraries
 from libs.__init__ import *
 
+import os
+import shutil
+import re
+import pandas as pd
+import numpy as np
+
+from collections import Counter
+
 # declare functions to clean files
 
-def get_nasty_files(list_of_words):
-  for filter_word in GLOB_FILES_TO_REMOVE:
-    list_of_words = [word for word in list_of_words if filter_word.upper() in word.upper()]
-  return list_of_words
-
-# clean files from datasets
-def clean_files(main_path):
-    # get path
-    for country, paths in main_path.items():
-        print(f'Country: {country}')
-        for path in paths:
-            # get files
-            files = get_nasty_files(os.listdir(path))
-            # check if it has files to be removed:
-            if len(files) > 0:
-                for file in files:
-                    file_path = f'{path}/{file}'
-                    # check if exists
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
+# create a function that get messy words
+def get_nasty_files(files_to_remove, list_of_words):
+  nasty_files = list()
+  for filter_word in files_to_remove:
+    nasty_files.extend([word for word in list_of_words if filter_word.upper() in word.upper()])
+  return nasty_files
 
 # create a function to delete files
-def delete_nasty_files(path):
+def delete_nasty_files(path, files_to_remove):
   # get files list
   list_files = os.listdir(path)
 
   # gest nasty files
-  nasty_files = get_nasty_files(list_files)
+  nasty_files = get_nasty_files(files_to_remove, list_files)
 
   # validate if exists then remove it
   if len(nasty_files) > 0:
@@ -52,29 +46,29 @@ def get_group_name(group_label, zfill = 6):
     return lower_bound, upper_bound, group_name
 
 # function to remove nasty files on each group
-def clean_nasty_files_from_group(root_path, group_label):
+def clean_nasty_files_from_group(input_path, group_label, files_to_remove):
     # obtain group name
     _, _, group_name = get_group_name(group_label)
 
     # get path
-    group_path = f'{root_path}/{group_name}'
+    group_path = f'{input_path}/{group_name}'
 
     # clean first nasty files
-    delete_nasty_files(group_path)
+    delete_nasty_files(group_path, files_to_remove)
 
     # get labels' path
     label_path = f'{group_path}/labels'
 
     # clean second nasty files
-    delete_nasty_files(label_path)
+    delete_nasty_files(label_path, files_to_remove)
 
 # function to copy all txt files from a folder to another one
-def copy_txt_files(root_path, group_label, destination_folder):
+def copy_txt_files(input_path, group_label, destination_folder):
   # get group name
   _, _, group_name = get_group_name(group_label)
 
   # get group path
-  source_folder = f'{root_path}/{group_name}/labels'
+  source_folder = f'{input_path}/{group_name}/labels'
 
   # ensure the source folder exists
   if not os.path.exists(source_folder):
@@ -122,3 +116,153 @@ def copy_img_files(group_label, source_folder, destination_folder):
      
       # copy the file
       shutil.copy2(src_file, dest_file)
+
+def retrieve_labels_from_group(group_path):
+    # get txts
+    path = os.path.join(group_path, 'labels')
+    txts = sorted(os.listdir(path))
+
+    # Create pattern to identify the image number
+    pattern = '[0-9]+'
+
+    # Declare a dictionary for equivalence
+    label_equivalence = {'image': 'image',
+                         0: 'D00',
+                         1: 'D10',
+                         2: 'D20',
+                         3: 'D40'}
+    
+    # Declare empty list to store each register
+    records = list()
+
+    # iterate over txt files
+    for txt in txts:
+        # get image number
+        img_num = int(re.findall(pattern, txt)[0])
+
+        # grab path
+        txt_path = os.path.join(path, txt)
+
+        # read txt file
+        with open(txt_path, 'r') as file:
+            content = file.read()
+
+        # get labels per image
+        labels = [int(line[0]) for line in content.split('\n') if line != '']
+
+        # get unique values
+        unique = dict(Counter(labels))
+        unique_sel = unique.copy()
+
+        # add remaining labels
+        for lbl in [0, 1, 2, 3]:
+            if lbl not in unique:
+                unique_sel[lbl] = 0
+
+        # sort dict
+        unique_sel = dict(sorted(unique_sel.items()))
+
+        # create record
+        record = dict()
+        record['image'] = img_num
+        record.update(unique_sel)
+
+        # save record
+        records.append(record)
+
+    # convert into dataframe
+    records = pd.DataFrame(records)
+    records.columns = records.columns.map(label_equivalence)
+
+    return records
+
+def retrieve_labels_from_rdd2022(label_root_path, subset):
+    # get txts
+    path = os.path.join(label_root_path, subset)
+    txts = sorted(os.listdir(path))
+
+    # Create pattern to identify the image number
+    pattern = '[0-9]+'
+
+    # Declare a dictionary for equivalence
+    label_equivalence = {'image': 'image',
+                         0: 'D00',
+                         1: 'D10',
+                         2: 'D20',
+                         3: 'D40'}
+    
+    # Declare empty list to store each register
+    records = list()
+
+    # iterate over txt files
+    for txt in txts:
+        # get image number
+        img_num = int(re.findall(pattern, txt)[0])
+
+        # grab path
+        txt_path = os.path.join(path, txt)
+
+        # read txt file
+        with open(txt_path, 'r') as file:
+            content = file.read()
+
+        # get labels per image
+        labels = [int(line[0]) for line in content.split('\n') if line != '']
+
+        # get unique values
+        unique = dict(Counter(labels))
+        unique_sel = unique.copy()
+
+        # add remaining labels
+        for lbl in [0, 1, 2, 3]:
+            if lbl not in unique:
+                unique_sel[lbl] = 0
+
+        # sort dict
+        unique_sel = dict(sorted(unique_sel.items()))
+
+        # create record
+        record = dict()
+        record['image'] = img_num
+        record.update(unique_sel)
+
+        # save record
+        records.append(record)
+
+    # convert into dataframe
+    records = pd.DataFrame(records)
+    records.columns = records.columns.map(label_equivalence)
+
+    return records
+
+def clean_folder(folder_path):
+  shutil.rmtree(folder_path)
+  os.makedirs(folder_path)
+
+def distribute_images(images_df, img_in_path, lbl_in_path, img_out_path_root, lbl_out_ath_root, subsets = ['train', 'val', 'test']):
+    for subset in subsets:
+        # get image index
+        img_idx = images_df.loc[images_df['subset'] == subset, 'image'].tolist()
+
+        # get paths
+        img_path = os.path.join(img_out_path_root, subset)
+        lbl_path = os.path.join(lbl_out_ath_root, subset)
+
+        # clean folfers
+        clean_folder(img_path)
+        clean_folder(lbl_path)
+
+        # get images and labels
+        imgs = [img_name for img_name in sorted(os.listdir(img_in_path)) 
+                if int(re.findall('[0-9]+', img_name)[0]) in img_idx]
+        
+        lbls =  [img_name for img_name in sorted(os.listdir(lbl_in_path)) 
+            if int(re.findall('[0-9]+', img_name)[0]) in img_idx]
+        
+        # copy the file
+        for img, lbl in zip(imgs, lbls):
+            img_path_source = os.path.join(img_in_path, img)
+            lbl_path_source = os.path.join(lbl_in_path, lbl)
+
+            shutil.copy2(img_path_source, img_path)
+            shutil.copy2(lbl_path_source, lbl_path)

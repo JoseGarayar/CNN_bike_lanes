@@ -1,0 +1,25 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "D00 - Longitudinal Crack"
+    },
+    {
+      "id": 1,
+      "name": "D10 - Transverse Crack"
+    },
+    {
+      "id": 2,
+      "name": "D20 - Alligator Crack"
+    },
+    {
+      "id": 3,
+      "name": "D40 - Potholes Crack"
+    }
+  ],
+  "info": {
+    "year": 2024,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}

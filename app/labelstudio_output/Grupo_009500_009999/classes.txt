@@ -1,0 +1,4 @@
+D00 - Longitudinal Crack
+D10 - Transverse Crack
+D20 - Alligator Crack
+D40 - Potholes Crack
