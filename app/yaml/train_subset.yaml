@@ -1,0 +1,12 @@
+train: []
+
+val:
+  - ../lima_bike_lanes_subsets/images/train
+
+nc: 4
+
+names:
+  0: 'D00 - Longitudinal Crack'
+  1: 'D10 - Transverse Crack'
+  2: 'D20 - Alligator Crack'
+  3: 'D40 - Potholes Crack'
