@@ -273,3 +273,13 @@ tags
 # Dataset
 app/datasets
 app/datasets_raw
+
+app/labels/version_13
+app/labels/version_14
+app/labels/version_15
+
+app/datasets_track/subsets_v007.csv
+app/datasets_track/subsets_v008.csv
+app/datasets_track/subsets_v009.csv
+app/datasets_track/subsets_v010.csv
+app/datasets_track/subsets_v011.csv
