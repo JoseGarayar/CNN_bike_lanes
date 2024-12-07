@@ -239,14 +239,14 @@ def clean_folder(folder_path):
   shutil.rmtree(folder_path)
   os.makedirs(folder_path)
 
-def distribute_images(images_df, img_in_path, lbl_in_path, img_out_path_root, lbl_out_ath_root, subsets = ['train', 'val', 'test']):
+def distribute_images(images_df, img_in_path, lbl_in_path, img_out_path_root, lbl_out_path_root, subsets = ['train', 'val', 'test']):
     for subset in subsets:
         # get image index
         img_idx = images_df.loc[images_df['subset'] == subset, 'image'].tolist()
 
         # get paths
         img_path = os.path.join(img_out_path_root, subset)
-        lbl_path = os.path.join(lbl_out_ath_root, subset)
+        lbl_path = os.path.join(lbl_out_path_root, subset)
 
         # clean folfers
         clean_folder(img_path)
@@ -263,6 +263,49 @@ def distribute_images(images_df, img_in_path, lbl_in_path, img_out_path_root, lb
         for img, lbl in zip(imgs, lbls):
             img_path_source = os.path.join(img_in_path, img)
             lbl_path_source = os.path.join(lbl_in_path, lbl)
+
+            shutil.copy2(img_path_source, img_path)
+            shutil.copy2(lbl_path_source, lbl_path)
+
+def save_experiment_labels(input_path, output_path, subsets = ['train', 'val', 'test']):
+    # create output path
+    for subset in subsets:
+        # create subset path
+        subset_output_path = f'{output_path}/{subset}'
+        os.makedirs(subset_output_path, exist_ok = True)
+
+        # read from input path
+        subset_input_path = f'{input_path}/{subset}'
+
+        # copy labels
+        for label in os.listdir(subset_input_path):
+            label_path_in = f'{subset_input_path}/{label}'
+            label_path_out = f'{subset_output_path}/{label}'
+            shutil.copy2(label_path_in, label_path_out)
+
+def distribute_images_from_labels(img_in_path, lbl_in_path, img_out_path_root, lbl_out_path_root, subsets = ['train', 'val', 'test'], img_extension = 'png'):
+    for subset in subsets:
+        # get subset label path
+        subset_label_in_path = f'{lbl_in_path}/{subset}'
+
+        # get labels
+        lbls = sorted(os.listdir(subset_label_in_path))
+
+        # change their name to images
+        imgs = [lbl.replace('txt', img_extension) for lbl in lbls]
+
+        # get paths
+        img_path = os.path.join(img_out_path_root, subset)
+        lbl_path = os.path.join(lbl_out_path_root, subset)
+
+        # clean folfers
+        clean_folder(img_path)
+        clean_folder(lbl_path)
+
+        # copy the file
+        for img, lbl in zip(imgs, lbls):
+            img_path_source = os.path.join(img_in_path, img)
+            lbl_path_source = os.path.join(subset_label_in_path, lbl)
 
             shutil.copy2(img_path_source, img_path)
             shutil.copy2(lbl_path_source, lbl_path)
